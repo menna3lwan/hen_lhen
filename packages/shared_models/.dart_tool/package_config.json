@@ -1,0 +1,16 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "shared_models",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    }
+  ],
+  "generator": "pub",
+  "generatorVersion": "3.12.1",
+  "flutterRoot": "file:///opt/homebrew/share/flutter",
+  "flutterVersion": "3.44.1",
+  "pubCache": "file:///Users/menna3lwan/.pub-cache"
+}
