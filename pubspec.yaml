@@ -1,0 +1,5 @@
+name: hen_lhen_workspace
+description: A new Flutter workspace.
+version: 1.0.0+1
+environment:
+  sdk: '>=3.0.0 <4.0.0'

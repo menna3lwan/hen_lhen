@@ -1,0 +1,15 @@
+name: hen_lhen
+
+packages:
+  - "apps/**"
+  - "patient_app"
+  - "doctor_app"
+  - "packages/**"
+
+scripts:
+  analyze:
+    run: melos exec -c 1 -- "flutter analyze"
+    description: Run flutter analyze across all packages.
+  test:
+    run: melos exec -c 1 -- "flutter test"
+    description: Run flutter test across all packages.
