@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL 16 ──
+  db:
+    image: postgres:16-alpine
+    container_name: henlehen_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: henlehen
+      POSTGRES_PASSWORD: henlehen_secret
+      POSTGRES_DB: henlehen_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U henlehen -d henlehen_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis 7 ──
+  redis:
+    image: redis:7-alpine
+    container_name: henlehen_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ──
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: henlehen_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://henlehen:henlehen_secret@db:5432/henlehen_db
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+      - ./uploads:/app/uploads
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+  redis_data:
